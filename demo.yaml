@@ -1,0 +1,39 @@
+apiVersion: apps/v1 # Usa apps/v1beta2 para versiones anteriores a 1.9.0
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1 # indica al controlador que ejecute 2 pods
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nifi
+        image: apache/nifi:latest
+        ports:
+        - containerPort: 8080
+      - name: superset
+        image: amancevice/superset:latest
+        ports:
+        - containerPort: 8088
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+      - name: postgres
+        image: postgres:latest
+        envFrom:
+          - configMapRef:
+              name: postgres-config-demo
+        ports:
+        - containerPort: 5432
+          name: postgredb
+      volumes:
+          - name: data_dir
+          - hostPath:
+                path: /home/emi/temp

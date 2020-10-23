@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nifi-config-demo
+  labels:
+    app: nifi
+data:
+  NIFI_HOME: /opt/nifi/nifi-current
+  NIFI_LOG_DIR: /opt/nifi/nifi-current/logs
+  NIFI_TOOLKIT_HOME: /opt/nifi/nifi-toolkit-current
+  NIFI_PID_DIR: /opt/nifi/nifi-current/run
+  NIFI_BASE_DIR: /opt/nifi
