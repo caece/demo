@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyter-config
+  labels:
+data:
+  JUPYTER_TOKEN: easy

@@ -1,39 +1,60 @@
 apiVersion: apps/v1 # Usa apps/v1beta2 para versiones anteriores a 1.9.0
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: lab20
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: lab20
   replicas: 1 # indica al controlador que ejecute 2 pods
   template:
     metadata:
       labels:
-        app: nginx
+        app: lab20
     spec:
       containers:
       - name: nifi
         image: apache/nifi:latest
+        envFrom:
+          - configMapRef:
+              name: nifi-config
         ports:
-        - containerPort: 8080
+        - containerPort: 9090
+        #volumeMounts:
+        #  - name: nifi-libs-dir
+        #    mountPath: /caece_libs/
       - name: superset
         image: amancevice/superset:latest
         ports:
         - containerPort: 8088
-      - name: nginx
-        image: nginx:1.7.9
+      - name: jupiter
+        image: jupyter/pyspark-notebook:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8888
+        envFrom:
+          - configMapRef:
+              name: jupyter-config
+        #volumeMounts:
+        #  - name: data-dir
+        #    mountPath: /caece
       - name: postgres
         image: postgres:latest
         envFrom:
           - configMapRef:
-              name: postgres-config-demo
+              name: postgres-config
+        #volumeMounts:
+        #  - name: postgresql-data-dir
+        #    mountPath: /docker-entrypoint-initdb.d
         ports:
         - containerPort: 5432
           name: postgredb
-      volumes:
-          - name: data_dir
-          - hostPath:
-                path: /home/emi/temp
+      #volumes:
+      #  - name: data-dir
+      #    hostPath:
+      #      path: /home/emi/temp
+      #  - name: nifi-libs-dir
+      #    hostPath:
+      #      path: /home/emi/temp/demo/libs/nifi
+      #  - name: postgresql-data-dir
+      #    hostPath:
+      #      path: /home/emi/temp/demo/data/postgresql
